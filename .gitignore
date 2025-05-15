@@ -1,0 +1,251 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Operating Systems
+# ─────────────────────────────────────────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Common logs and temporary files
+# ─────────────────────────────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Editor temp files
+*.sublime-workspace
+*.sublime-project
+*~
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+.history/
+
+# JetBrains IDEs
+.idea/
+out/
+
+# Eclipse
+.metadata/
+*.tmp
+*.bak
+*.swp
+.project
+.classpath
+.c9/
+.settings/
+*.launch
+.externalToolBuilders/
+.externalToolBuilder/
+
+# vim swap files
+*.swp
+*.swo
+*.vimrc
+
+# Emacs backup files
+*~
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Languages and Frameworks
+# ─────────────────────────────────────────────────────────────────────────────
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+venv/
+pip-wheel-metadata/
+htmlcov/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+hs_err_pid*
+*.log
+build/
+target/
+out/
+
+# Maven
+.settings/
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Gradle
+.gradle/
+build/
+
+# Ruby
+*.gem
+/vendor/bundle/
+/.bundle/
+/log/
+/tmp/
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/public/system
+.byebug_history
+
+# PHP
+/vendor/
+composer.phar
+composer.lock
+.env
+.phpunit.result.cache
+.php_cs.cache
+
+# Go
+/bin/
+/obj/
+/vendor/
+/coverage.out
+
+# Rust
+/target/
+/**/*.rs.bk
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.vs/
+*.dbmdl
+*.pdb
+
+# Android/IntelliJ
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/output.json
+/build/
+
+# iOS
+*.xcuserstate
+*.xcworkspace/**
+/Pods/
+/DerivedData/
+/build/
+/.DS_Store
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CI/CD and Container Configurations
+# ─────────────────────────────────────────────────────────────────────────────
+/.vagrant/
+/*.box
+docker-compose.override.yml
+Dockerfile.local
+.env.local
+.env.test
+.env.*.local
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Kubernetes
+*.kube/
+
+# Ansible
+*.retry
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Editor & IDE extras
+# ─────────────────────────────────────────────────────────────────────────────
+# JetBrains Rider
+.idea/
+/*.sln.iml
+
+# Visual Studio
+*.csproj.user
+*.dbmdl
+*.jfm
+*.psess
+*.vsp
+*.vspscc
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Assets/Plugins/Editor/JetBrains*
+
+# Unreal Engine
+Saved/
+DerivedDataCache/
+*.xcworkspace
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Secret file templates
+# ─────────────────────────────────────────────────────────────────────────────
+*.key
+*.pem
+*.p12
+*.jks
+*.pfx
+*.cert
+*.crt
+*.env.local
+.env.*.local
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Examples of specific folders/files to ignore
+# ─────────────────────────────────────────────────────────────────────────────
+# Server logs
+/log/
+/logs/
+
+# Temporary folders
+/tmp/
+/cache/
+
+# Uploads
+/uploads/
+/public/uploads/
+
+# Build outputs not to be committed
+/build/
+/release/
