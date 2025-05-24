@@ -138,4 +138,13 @@ export default [
             'unicorn/prefer-module': RULE_STATUSES.OFF,
         },
     },
+
+    // JSON
+    {
+        files: ['**/*.json'],
+        rules: {
+            '@typescript-eslint/no-var-requires': RULE_STATUSES.OFF,
+            'unicorn/prefer-module': RULE_STATUSES.OFF,
+        },
+    },
 ];
