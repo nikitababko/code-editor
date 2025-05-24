@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme {
+    --color-dark-400: #2e2e39;
+}

@@ -6,22 +6,36 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@tailwindcss/vite": "4.1.7",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "tailwindcss": "4.1.7"
   },
   "devDependencies": {
     "@eslint/js": "9.25.0",
+    "@stylistic/eslint-plugin-js": "4.2.0",
+    "@stylistic/eslint-plugin-ts": "4.2.0",
+    "@types/node": "22.15.21",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
+    "@typescript-eslint/eslint-plugin": "8.32.1",
+    "@typescript-eslint/parser": "8.32.1",
     "@vitejs/plugin-react": "4.4.1",
     "eslint": "9.25.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "18.0.0",
+    "eslint-config-prettier": "10.1.5",
+    "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.19",
+    "eslint-plugin-unicorn": "59.0.1",
     "globals": "16.0.0",
+    "prettier": "3.5.3",
     "typescript": "~5.8.3",
     "typescript-eslint": "8.30.1",
     "vite": "6.3.5"
