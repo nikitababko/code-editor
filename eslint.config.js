@@ -33,7 +33,7 @@ const commonTsRules = {
     '@stylistic/js/arrow-parens': ['error', 'always'],
     '@stylistic/js/brace-style': ['error', '1tbs'],
     '@stylistic/js/block-spacing': ['error', 'never'],
-    '@stylistic/js/max-len': ['error', { code: 90 }],
+    '@stylistic/js/max-len': ['error', { code: 90, ignoreStrings: true }],
     '@stylistic/js/object-curly-spacing': ['error', 'always'],
     '@stylistic/ts/quotes': ['error', 'single'],
     '@stylistic/ts/comma-dangle': ['error', 'always-multiline'],
@@ -121,7 +121,12 @@ export default [
             'react/jsx-boolean-value': 'error',
             'react/display-name': 'off',
             'react/jsx-curly-brace-presence': 'error',
-            'react/forbid-component-props': 'error',
+            'react/forbid-component-props': [
+                'error',
+                {
+                    forbid: ['style'],
+                },
+            ],
             'react/jsx-key': ['error'],
             'react-refresh/only-export-components': [
                 'warn',

@@ -1,0 +1,26 @@
+.loader {
+    @apply relative grid aspect-square w-[50px] rounded-full border-4 border-transparent border-r-[#ffb900];
+    animation: loader-animation 1s infinite linear;
+}
+
+.loader::before,
+.loader::after {
+    content: '';
+    grid-area: 1/1;
+    margin: 2px;
+    border: inherit;
+    border-radius: 50%;
+    animation: loader-animation 2s infinite;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.loader::after {
+    margin: 8px;
+    animation-duration: 3s;
+}
+@keyframes loader-animation {
+    100% {
+        transform: rotate(1turn);
+    }
+}
