@@ -1,4 +1,4 @@
 export type Props = {
-    isLoading: boolean;
-    output: string | null;
+  isLoading: boolean;
+  output: string | null;
 };
