@@ -13,7 +13,7 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditorLoading, setIsEditorLoading] = useState(true);
 
-  const handleEditorDidMount: OnMount = (editor) => {
+  const onEditorMount: OnMount = (editor) => {
     setIsEditorLoading(false);
     editorReference.current = editor;
   };
@@ -43,8 +43,8 @@ export const App = () => {
   };
 
   return (
-    <div className="bg-dark-400 h-screen">
-      <div className="m-auto grid h-screen max-w-[1920px] grid-cols-2 grid-rows-[auto_1fr_150px] gap-[20px] p-[10px] lg:grid-rows-[auto_1fr]">
+    <div className="bg-dark-400 min-h-screen">
+      <div className="m-auto grid min-h-screen max-w-[1920px] grid-cols-2 grid-rows-[auto_1fr_0.5fr] gap-[20px] p-[10px] lg:grid-rows-[auto_1fr]">
         <div className="col-span-full flex max-h-[fit-content] max-w-[fit-content] items-center gap-[10px] lg:col-start-2">
           <Button
             onClick={handleRunCode}
@@ -61,14 +61,14 @@ export const App = () => {
 
         <div
           className={clsx(
-            'h-[100%] max-lg:col-span-full',
+            'max-lg:col-span-full',
             isEditorLoading && 'rounded-[8px] border-[1px]',
           )}
         >
           <Editor
             defaultLanguage="javascript"
             defaultValue="// Start coding"
-            onMount={handleEditorDidMount}
+            onMount={onEditorMount}
             theme="vs-dark"
             loading={<Loader />}
             className="overflow-hidden rounded-[8px]"

@@ -1,4 +1,4 @@
 {
-    "**/*.{js,jsx,ts,tsx}": ["pnpm lint:fix"],
-    "**/*.{json,md,css,scss}": ["pnpm format"]
+  "**/*.{js,jsx,ts,tsx}": ["pnpm lint:fix"],
+  "**/*.{json,md,css,scss}": ["pnpm format"]
 }
