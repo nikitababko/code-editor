@@ -16,18 +16,40 @@ const RULE_STATUSES = {
   WARN: 'warn',
 };
 
+const BOOLEAN_PREFIXES = ['is', 'has', 'should', 'can'];
+
 const commonTsRules = {
   // Common
   'no-console': [RULE_STATUSES.WARN, { allow: ['warn', 'error'] }],
+  'import/prefer-default-export': RULE_STATUSES.OFF,
+  'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
 
   // TypeScript
   '@typescript-eslint/no-magic-numbers': RULE_STATUSES.OFF,
   '@typescript-eslint/consistent-type-imports': RULE_STATUSES.ERROR,
   '@typescript-eslint/no-namespace': RULE_STATUSES.OFF,
   '@typescript-eslint/ban-types': RULE_STATUSES.OFF,
-  'import/prefer-default-export': RULE_STATUSES.OFF,
-  'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
-  '@stylistic/ts/indent': ['error', 2],
+  '@typescript-eslint/naming-convention': [
+    'error',
+    {
+      selector: 'variable', // Checks variables (let/const/var)
+      types: ['boolean'],
+      format: ['camelCase', 'PascalCase'],
+      prefix: BOOLEAN_PREFIXES,
+    },
+    {
+      selector: 'property', // Checks object and class properties
+      types: ['boolean'],
+      format: ['camelCase', 'PascalCase'],
+      prefix: BOOLEAN_PREFIXES,
+    },
+    {
+      selector: 'parameter', // Checks function parameters
+      types: ['boolean'],
+      format: ['camelCase', 'PascalCase'],
+      prefix: BOOLEAN_PREFIXES,
+    },
+  ],
 
   // Stylistic
   '@stylistic/js/arrow-parens': ['error', 'always'],
@@ -39,6 +61,7 @@ const commonTsRules = {
   '@stylistic/ts/comma-dangle': ['error', 'always-multiline'],
   '@stylistic/js/semi': ['error', 'always'],
   '@stylistic/ts/semi': ['error', 'always'],
+  '@stylistic/ts/indent': ['error', 2],
 
   // Unicorn
   'unicorn/filename-case': [

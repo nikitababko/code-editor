@@ -48,13 +48,13 @@ export const App = () => {
         <div className="col-span-full flex max-h-[fit-content] max-w-[fit-content] items-center gap-[10px] lg:col-start-2">
           <Button
             onClick={handleRunCode}
-            isEditorLoading={isEditorLoading}
+            isDisabled={isEditorLoading}
             label={CODE_RUN_BUTTON_LABEL}
           />
 
           <Button
             onClick={handleCleanOutput}
-            isEditorLoading={isEditorLoading}
+            isDisabled={isEditorLoading}
             label="Clean output"
           />
         </div>

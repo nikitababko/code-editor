@@ -1,5 +1,5 @@
 export type Props = {
   onClick: () => void;
-  isEditorLoading: boolean;
+  isDisabled: boolean;
   label: string;
 };
