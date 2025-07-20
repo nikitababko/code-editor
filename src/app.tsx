@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { executeCode } from './core/api';
 import { Loader } from './components/loader';
 import clsx from 'clsx';
 import { Button } from './components/button';
-import { CODE_RUN_BUTTON_LABEL } from './constants.ts';
+import { CODE_RUN_BUTTON_LABEL, LOCAL_STORAGE_CODE } from './constants.ts';
 import { Editor, type OnMount } from '@monaco-editor/react';
 import { Output } from './components/output';
+import { useDebounce } from './hooks/use-debounce.ts';
 
 export const App = () => {
   const editorReference = useRef<Parameters<OnMount>[0] | null>(null);
@@ -42,6 +43,20 @@ export const App = () => {
     setOutput(null);
   };
 
+  useEffect(() => {
+    const code = localStorage.getItem(LOCAL_STORAGE_CODE);
+
+    if (code) {
+      editorReference?.current?.setValue(code);
+    }
+  }, [isEditorLoading]);
+
+  const handleEditorChangeDebounced = useDebounce((value) => {
+    if (value) {
+      localStorage.setItem(LOCAL_STORAGE_CODE, value);
+    }
+  }, 1000);
+
   return (
     <div className="bg-dark-400 min-h-screen">
       <div className="m-auto grid min-h-screen max-w-[1920px] grid-cols-2 grid-rows-[auto_1fr_0.5fr] gap-[20px] p-[10px] lg:grid-rows-[auto_1fr]">
@@ -72,6 +87,9 @@ export const App = () => {
             theme="vs-dark"
             loading={<Loader />}
             className="overflow-hidden rounded-[8px]"
+            onChange={(value) => {
+              handleEditorChangeDebounced(value);
+            }}
           />
         </div>
 
