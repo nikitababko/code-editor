@@ -3,9 +3,9 @@ import { Loader } from '../loader';
 import type { Props } from './output.types.ts';
 import { CODE_RUN_BUTTON_LABEL } from '../../constants.ts';
 
-export const Output: React.FC<Props> = ({ isLoading, output }) => {
+export const Output: React.FC<Props> = ({ isLoading, output, ref }) => {
   return (
-    <div className="relative w-full rounded-[8px] border-[1px] p-[10px] max-lg:col-span-full max-lg:row-start-3">
+    <div ref={ref} className="relative flex-1 rounded-[8px] border-[1px] p-[10px]">
       {isLoading ? (
         <Loader className="top-[50%] left-[50%] translate-[-50%]" />
       ) : (
