@@ -1,20 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { executeCode } from './core/api';
+import { Editor, type OnMount } from '@monaco-editor/react';
+import clsx from 'clsx';
+import React, { useRef, useState } from 'react';
 import { Button } from './components/button';
+import { LanguageSelect } from './components/language-select';
+import { Loader } from './components/loader';
+import { Output } from './components/output';
 import {
   CODE_RUN_BUTTON_LABEL,
   DEFAULT_EDITOR_WIDTH,
+  LANGUAGES,
   LOCAL_STORAGE_CODE,
   LOCAL_STORAGE_EDITOR_WIDTH,
   MAX_EDITOR_WIDTH,
   MIN_EDITOR_WIDTH,
-  MIN_OUTPUT_WIDTH,
 } from './constants.ts';
-import { Editor, type OnMount } from '@monaco-editor/react';
-import { useDebounce } from './hooks/use-debounce.ts';
-import { Output } from './components/output';
-import clsx from 'clsx';
-import { Loader } from './components/loader';
+import { executeCode } from './core/api';
+import { useDebounce } from './hooks';
+import type { LanguageType } from './types.ts';
 
 export const App = () => {
   const editorReference = useRef<Parameters<OnMount>[0] | null>(null);
@@ -26,20 +28,39 @@ export const App = () => {
   const [editorWidth, setEditorWidth] = useState(
     Number(localStorage.getItem(LOCAL_STORAGE_EDITOR_WIDTH) ?? DEFAULT_EDITOR_WIDTH),
   );
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>(LANGUAGES[0]);
 
   const onEditorMount: OnMount = (editor) => {
     setIsEditorLoading(false);
     editorReference.current = editor;
+
+    const defaultLanguageId = null;
+
+    const foundLanguage = LANGUAGES.find((lang) => {
+      return lang.id === defaultLanguageId;
+    });
+
+    if (foundLanguage) {
+      setSelectedLanguage(foundLanguage);
+    }
+
+    const code = localStorage.getItem(LOCAL_STORAGE_CODE);
+
+    if (code) {
+      editorReference?.current?.setValue(code);
+    }
   };
 
   const handleRunCode = async () => {
+    if (isLoading) return;
+
     try {
       const code = editorReference?.current?.getValue?.();
 
       if (!code) return;
 
       setIsLoading(true);
-      const response = await executeCode(code);
+      const response = await executeCode(code, selectedLanguage.id);
       setOutput(response?.data?.run?.output || 'undefined');
     } catch (error) {
       if (error instanceof Error) {
@@ -56,23 +77,9 @@ export const App = () => {
     setOutput(null);
   };
 
-  useEffect(() => {
-    const code = localStorage.getItem(LOCAL_STORAGE_CODE);
-
-    if (code) {
-      editorReference?.current?.setValue(code);
-    }
-  }, [isEditorLoading]);
-
   const handleEditorCodeChangeDebounced = useDebounce((value) => {
     if (value) {
       localStorage.setItem(LOCAL_STORAGE_CODE, value);
-    }
-  }, 1000);
-
-  const handleEditorWidthChangeDebounced = useDebounce((value) => {
-    if (value) {
-      localStorage.setItem(LOCAL_STORAGE_EDITOR_WIDTH, value);
     }
   }, 1000);
 
@@ -80,20 +87,24 @@ export const App = () => {
     document.body.style.cursor = 'col-resize';
     const startX = event.clientX;
     const startWidth = editorWidth;
-    const containerWidth = containerReference.current?.clientWidth ?? 0;
 
-    const onMove = (event_: MouseEvent) => {
-      const delta = event_.clientX - startX;
-      let newEditorWidth = startWidth + delta;
-      const maxEditorWidth = containerWidth - MIN_OUTPUT_WIDTH;
-      newEditorWidth = Math.min(newEditorWidth, maxEditorWidth);
-      newEditorWidth = Math.max(
-        MIN_EDITOR_WIDTH,
-        Math.min(MAX_EDITOR_WIDTH, newEditorWidth),
-      );
+    let raf = 0;
 
-      setEditorWidth(newEditorWidth);
-      handleEditorWidthChangeDebounced(newEditorWidth);
+    const onMove = (event: MouseEvent) => {
+      cancelAnimationFrame(raf);
+
+      raf = requestAnimationFrame(() => {
+        const delta = event.clientX - startX;
+        let newEditorWidth = startWidth + delta;
+
+        // ограничения
+        newEditorWidth = Math.max(
+          MIN_EDITOR_WIDTH,
+          Math.min(MAX_EDITOR_WIDTH, newEditorWidth),
+        );
+
+        setEditorWidth(newEditorWidth);
+      });
     };
 
     const onUp = () => {
@@ -109,17 +120,19 @@ export const App = () => {
   return (
     <div className="bg-dark-400 flex min-h-screen p-[10px]">
       <div className="m-[0_auto] flex w-full max-w-[1920px] flex-col gap-[20px]">
-        <div className="flex gap-[10px]">
-          <Button
-            onClick={handleRunCode}
-            isDisabled={isEditorLoading}
-            label={CODE_RUN_BUTTON_LABEL}
-          />
+        <div className="flex flex-wrap gap-[10px]">
+          <Button onClick={handleRunCode} isDisabled={isEditorLoading}>
+            {CODE_RUN_BUTTON_LABEL}
+          </Button>
 
-          <Button
-            onClick={handleCleanOutput}
+          <Button onClick={handleCleanOutput} isDisabled={isEditorLoading}>
+            Clean output
+          </Button>
+
+          <LanguageSelect
+            selected={selectedLanguage}
+            setSelected={setSelectedLanguage}
             isDisabled={isEditorLoading}
-            label="Clean output"
           />
         </div>
 
@@ -134,13 +147,12 @@ export const App = () => {
             )}
             style={{
               width: editorWidth,
-              minWidth: MIN_EDITOR_WIDTH,
               maxWidth: MAX_EDITOR_WIDTH,
             }}
           >
             <Editor
-              defaultLanguage="javascript"
-              defaultValue="// Start coding"
+              defaultLanguage={LANGUAGES[0].id}
+              defaultValue={selectedLanguage.defaultValue}
               onMount={onEditorMount}
               theme="vs-dark"
               loading={<Loader />}
@@ -148,6 +160,7 @@ export const App = () => {
               onChange={(value) => {
                 handleEditorCodeChangeDebounced(value);
               }}
+              language={selectedLanguage.id}
             />
           </div>
 

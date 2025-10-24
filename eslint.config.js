@@ -68,7 +68,7 @@ const commonTsRules = {
     RULE_STATUSES.ERROR,
     { cases: { camelCase: true, pascalCase: true, kebabCase: true } },
   ],
-  'unicorn/prevent-abbreviations': [RULE_STATUSES.ERROR, { ignore: ['Props'] }],
+  'unicorn/prevent-abbreviations': [RULE_STATUSES.ERROR, { ignore: ['Props', 'ref'] }],
   'unicorn/no-null': RULE_STATUSES.OFF,
   'unicorn/consistent-function-scoping': RULE_STATUSES.OFF,
 };

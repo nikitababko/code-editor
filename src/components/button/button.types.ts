@@ -1,5 +1,8 @@
-export type Props = {
+import type React from 'react';
+
+export type Props = React.ComponentProps<'button'> & {
   onClick: () => void;
   isDisabled: boolean;
-  label: string;
+  children?: React.ReactNode;
+  className?: string;
 };
