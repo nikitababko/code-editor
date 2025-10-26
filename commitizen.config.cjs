@@ -45,7 +45,7 @@ module.exports = {
       name: 'revert:    Reverts a previous commit',
     },
   ],
-  scopes: [''],
+  scopes: [],
   allowCustomScopes: true,
   allowBreakingChanges: false,
 };
