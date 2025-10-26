@@ -18,6 +18,19 @@ import { executeCode } from './core/api';
 import { useDebounce } from './hooks';
 import type { LanguageType } from './types.ts';
 
+const formatDocumentNow = (editor: Parameters<OnMount>[0]) => {
+  editor?.getAction('editor.action.formatDocument')?.run();
+};
+
+const registerFormatOnSave = (
+  editor: Parameters<OnMount>[0],
+  monaco: Parameters<OnMount>[1],
+) => {
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+    formatDocumentNow(editor);
+  });
+};
+
 export const App = () => {
   const editorReference = useRef<Parameters<OnMount>[0] | null>(null);
   const outputReference = useRef<HTMLDivElement | null>(null);
@@ -30,7 +43,7 @@ export const App = () => {
   );
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>(LANGUAGES[0]);
 
-  const onEditorMount: OnMount = (editor) => {
+  const onEditorMount: OnMount = (editor, monaco) => {
     setIsEditorLoading(false);
     editorReference.current = editor;
 
@@ -49,6 +62,8 @@ export const App = () => {
     if (code) {
       editorReference?.current?.setValue(code);
     }
+
+    registerFormatOnSave(editor, monaco);
   };
 
   const handleRunCode = async () => {
@@ -118,15 +133,24 @@ export const App = () => {
   };
 
   return (
-    <div className="bg-dark-400 flex min-h-screen p-[10px]">
+    <div className="bg-dark-400 flex min-h-screen overflow-hidden p-[10px]">
       <div className="m-[0_auto] flex w-full max-w-[1920px] flex-col gap-[20px]">
-        <div className="flex flex-wrap gap-[10px]">
+        <div className="flex flex-wrap gap-[10px] max-sm:justify-between">
           <Button onClick={handleRunCode} isDisabled={isEditorLoading}>
             {CODE_RUN_BUTTON_LABEL}
           </Button>
 
           <Button onClick={handleCleanOutput} isDisabled={isEditorLoading}>
             Clean output
+          </Button>
+
+          <Button
+            onClick={() =>
+              editorReference.current && formatDocumentNow(editorReference.current)
+            }
+            isDisabled={isEditorLoading}
+          >
+            Prettify code
           </Button>
 
           <LanguageSelect
