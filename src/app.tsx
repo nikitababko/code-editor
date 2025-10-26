@@ -16,23 +16,17 @@ import {
 } from './constants.ts';
 import { executeCode } from './core/api';
 import { useDebounce } from './hooks';
-import type { LanguageType } from './types.ts';
-
-const formatDocumentNow = (editor: Parameters<OnMount>[0]) => {
-  editor?.getAction('editor.action.formatDocument')?.run();
-};
-
-const registerFormatOnSave = (
-  editor: Parameters<OnMount>[0],
-  monaco: Parameters<OnMount>[1],
-) => {
-  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-    formatDocumentNow(editor);
-  });
-};
+import type { EditorInstanceType, LanguageType } from './types.ts';
+import {
+  applyEditorOptions,
+  bindSaveShortcut,
+  formatDocumentNow,
+  restoreCodeFromStorage,
+  restoreLanguageLSFromStorage,
+} from './utils';
 
 export const App = () => {
-  const editorReference = useRef<Parameters<OnMount>[0] | null>(null);
+  const editorReference = useRef<EditorInstanceType | null>(null);
   const outputReference = useRef<HTMLDivElement | null>(null);
   const containerReference = useRef<HTMLDivElement | null>(null);
   const [output, setOutput] = useState<string | null>(null);
@@ -47,23 +41,10 @@ export const App = () => {
     setIsEditorLoading(false);
     editorReference.current = editor;
 
-    const defaultLanguageId = null;
-
-    const foundLanguage = LANGUAGES.find((lang) => {
-      return lang.id === defaultLanguageId;
-    });
-
-    if (foundLanguage) {
-      setSelectedLanguage(foundLanguage);
-    }
-
-    const code = localStorage.getItem(LOCAL_STORAGE_CODE);
-
-    if (code) {
-      editorReference?.current?.setValue(code);
-    }
-
-    registerFormatOnSave(editor, monaco);
+    restoreLanguageLSFromStorage(setSelectedLanguage);
+    restoreCodeFromStorage(editor);
+    applyEditorOptions(editor);
+    bindSaveShortcut(editor, monaco);
   };
 
   const handleRunCode = async () => {

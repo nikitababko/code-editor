@@ -41,6 +41,10 @@ const commonTsRules = {
       selector: 'property', // Checks object and class properties
       types: ['boolean'],
       format: ['camelCase', 'PascalCase'],
+      filter: {
+        regex: '^(formatOnPaste|formatOnType)$',
+        match: false,
+      },
       prefix: BOOLEAN_PREFIXES,
     },
     {
