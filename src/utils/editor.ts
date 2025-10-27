@@ -55,3 +55,13 @@ export const bindSaveShortcut = (editor: EditorInstanceType, monaco: MonacoType)
     formatDocumentNow(editor);
   });
 };
+
+export const bindRunShortcut = (
+  editor: EditorInstanceType,
+  monaco: MonacoType,
+  onRun: () => void,
+) => {
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+    onRun();
+  });
+};

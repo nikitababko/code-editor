@@ -19,6 +19,7 @@ import { useDebounce } from './hooks';
 import type { EditorInstanceType, LanguageType } from './types.ts';
 import {
   applyEditorOptions,
+  bindRunShortcut,
   bindSaveShortcut,
   formatDocumentNow,
   restoreCodeFromStorage,
@@ -36,16 +37,6 @@ export const App = () => {
     Number(localStorage.getItem(LOCAL_STORAGE_EDITOR_WIDTH) ?? DEFAULT_EDITOR_WIDTH),
   );
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>(LANGUAGES[0]);
-
-  const onEditorMount: OnMount = (editor, monaco) => {
-    setIsEditorLoading(false);
-    editorReference.current = editor;
-
-    restoreLanguageLSFromStorage(setSelectedLanguage);
-    restoreCodeFromStorage(editor);
-    applyEditorOptions(editor);
-    bindSaveShortcut(editor, monaco);
-  };
 
   const handleRunCode = async () => {
     if (isLoading) return;
@@ -67,6 +58,17 @@ export const App = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onEditorMount: OnMount = (editor, monaco) => {
+    setIsEditorLoading(false);
+    editorReference.current = editor;
+
+    restoreLanguageLSFromStorage(setSelectedLanguage);
+    restoreCodeFromStorage(editor);
+    applyEditorOptions(editor);
+    bindSaveShortcut(editor, monaco);
+    bindRunShortcut(editor, monaco, handleRunCode);
   };
 
   const handleCleanOutput = () => {
