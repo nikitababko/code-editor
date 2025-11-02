@@ -1,6 +1,6 @@
 import { Editor, type OnMount } from '@monaco-editor/react';
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from './components/button';
 import { LanguageSelect } from './components/language-select';
 import { Loader } from './components/loader';
@@ -38,7 +38,7 @@ export const App = () => {
   );
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>(LANGUAGES[0]);
 
-  const handleRunCode = async () => {
+  const handleRunCode = useCallback(async () => {
     if (isLoading) return;
 
     try {
@@ -48,7 +48,7 @@ export const App = () => {
 
       setIsLoading(true);
       const response = await executeCode(code, selectedLanguage.id);
-      setOutput(response?.data?.run?.output || 'undefined');
+      setOutput(response?.data?.run?.output ?? 'undefined');
     } catch (error) {
       if (error instanceof Error) {
         setOutput(error.message);
@@ -58,7 +58,12 @@ export const App = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoading, selectedLanguage.id]);
+
+  const runRef = useRef(handleRunCode);
+  useEffect(() => {
+    runRef.current = handleRunCode;
+  }, [handleRunCode]);
 
   const onEditorMount: OnMount = (editor, monaco) => {
     setIsEditorLoading(false);
@@ -68,7 +73,7 @@ export const App = () => {
     restoreCodeFromStorage(editor);
     applyEditorOptions(editor);
     bindSaveShortcut(editor, monaco);
-    bindRunShortcut(editor, monaco, handleRunCode);
+    bindRunShortcut(editor, monaco, runRef);
   };
 
   const handleCleanOutput = () => {

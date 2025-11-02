@@ -59,9 +59,9 @@ export const bindSaveShortcut = (editor: EditorInstanceType, monaco: MonacoType)
 export const bindRunShortcut = (
   editor: EditorInstanceType,
   monaco: MonacoType,
-  onRun: () => void,
+  runReference: React.RefObject<() => Promise<void>>,
 ) => {
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
-    onRun();
+    runReference.current?.();
   });
 };
