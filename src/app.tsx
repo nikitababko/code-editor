@@ -86,7 +86,13 @@ export const App = () => {
     }
   }, 1000);
 
+  const saveEditorWidthDebounced = useDebounce((width: number) => {
+    localStorage.setItem(LOCAL_STORAGE_EDITOR_WIDTH, String(width));
+  }, 300);
+
   const handleDrag = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
     document.body.style.cursor = 'col-resize';
     const startX = event.clientX;
     const startWidth = editorWidth;
@@ -107,6 +113,7 @@ export const App = () => {
         );
 
         setEditorWidth(newEditorWidth);
+        saveEditorWidthDebounced(newEditorWidth);
       });
     };
 
