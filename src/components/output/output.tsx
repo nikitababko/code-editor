@@ -7,7 +7,7 @@ export const Output: React.FC<Props> = ({ isLoading, output, ref }) => {
   const hiddenLabelId = useId();
 
   return (
-    <div className="relative flex-1 rounded-[8px] border-[1px] p-[10px]">
+    <div className="relative flex-1 rounded-[8px] border-[1px] p-[10px] min-lg:overflow-auto">
       {/* Hidden label for screen readers */}
       <span id={hiddenLabelId} className="sr-only">
         Code output
