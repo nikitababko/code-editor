@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { LANGUAGES, LOCAL_STORAGE_DEFAULT_LANGUAGE_ID } from '../../constants.ts';
 import { useOutsideClick } from '../../hooks';
@@ -9,6 +10,7 @@ export const LanguageSelect: React.FC<Props> = ({
   selected,
   setSelected,
   isDisabled,
+  className,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -22,7 +24,7 @@ export const LanguageSelect: React.FC<Props> = ({
   };
 
   return (
-    <div className="relative z-1 inline-block text-left" ref={ref}>
+    <div className={clsx('relative inline-block text-left', className)} ref={ref}>
       <Button
         onClick={() => setIsOpen((isOpenPrevious) => !isOpenPrevious)}
         isDisabled={isDisabled}

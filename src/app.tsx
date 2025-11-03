@@ -152,6 +152,7 @@ export const App = () => {
             selected={selectedLanguage}
             setSelected={setSelectedLanguage}
             isDisabled={isEditorLoading}
+            className="z-10"
           />
         </div>
 
