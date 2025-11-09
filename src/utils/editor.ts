@@ -1,4 +1,7 @@
-import type { OnMount } from '@monaco-editor/react';
+import * as babel from 'prettier/plugins/babel';
+import estree from 'prettier/plugins/estree';
+import * as typescript from 'prettier/plugins/typescript';
+import prettier from 'prettier/standalone';
 import type React from 'react';
 import {
   DEFAULT_LANGUAGE_ID,
@@ -42,10 +45,59 @@ export const applyEditorOptions = (editor: EditorInstanceType) => {
   });
 };
 
-export const formatDocumentNow = (editor: Parameters<OnMount>[0]) => {
+export const formatDocumentNow = async (editor: EditorInstanceType) => {
   if (!editor) return;
+  const model = editor.getModel();
+  if (!model) return;
 
-  editor?.getAction('editor.action.formatDocument')?.run();
+  const languageId = model.getLanguageId();
+  const code = editor.getValue() ?? '';
+
+  // Save the current cursor position and vertical scroll
+  const position = editor.getPosition() ?? model.getPositionAt(0);
+  const cursorOffset = model.getOffsetAt(position);
+  const prevScrollTop = editor.getScrollTop();
+
+  // Format code with Prettier while keeping track of the cursor position
+  const { formatted, cursorOffset: nextCursorOffset } = await prettier.formatWithCursor(
+    code,
+    {
+      parser:
+        languageId === 'typescript' || languageId === 'typescriptreact'
+          ? 'typescript'
+          : 'babel',
+      plugins: [babel, estree, typescript],
+      semi: true,
+      singleQuote: true,
+      trailingComma: 'all',
+      cursorOffset,
+    },
+  );
+
+  // If nothing changed, skip editing to prevent flicker
+  if (formatted === code) return;
+
+  const fullRange = model.getFullModelRange();
+
+  // Start an undo stop, apply edits, then stop again
+  editor.pushUndoStop();
+  editor.executeEdits('prettier-format', [{ range: fullRange, text: formatted }]);
+  editor.pushUndoStop();
+
+  // Compute the new cursor position based on returned offset
+  const nextPos = model.getPositionAt(
+    Math.max(0, Math.min(formatted.length, nextCursorOffset)),
+  );
+
+  // Restore the cursor without forcing viewport jumps
+  editor.setPosition(nextPos);
+  editor.revealPositionInCenterIfOutsideViewport(nextPos);
+
+  // Restore scroll only if it changed
+  const afterScrollTop = editor.getScrollTop();
+  if (afterScrollTop !== prevScrollTop) {
+    editor.setScrollTop(prevScrollTop);
+  }
 };
 
 export const bindSaveShortcut = (editor: EditorInstanceType, monaco: MonacoType) => {

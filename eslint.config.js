@@ -42,7 +42,7 @@ const commonTsRules = {
       types: ['boolean'],
       format: ['camelCase', 'PascalCase'],
       filter: {
-        regex: '^(formatOnPaste|formatOnType)$',
+        regex: '^(formatOnPaste|formatOnType|semi|singleQuote)$',
         match: false,
       },
       prefix: BOOLEAN_PREFIXES,
@@ -74,7 +74,7 @@ const commonTsRules = {
   ],
   'unicorn/prevent-abbreviations': [
     RULE_STATUSES.ERROR,
-    { ignore: ['Props', 'ref', 'Ref'] },
+    { ignore: ['Props', 'ref', 'Ref', 'prev'] },
   ],
   'unicorn/no-null': RULE_STATUSES.OFF,
   'unicorn/consistent-function-scoping': RULE_STATUSES.OFF,
