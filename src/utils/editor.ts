@@ -117,3 +117,34 @@ export const bindRunShortcut = (
     runReference.current?.();
   });
 };
+
+export const bindCommentAndNextLine = (
+  editor: EditorInstanceType,
+  monaco: MonacoType,
+) => {
+  if (!editor || !monaco) return;
+
+  editor.addAction({
+    id: 'comment-line-and-next',
+    label: 'Toggle Line Comment and Move Cursor Down',
+    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash],
+    run: async (editor) => {
+      // Toggle line comment
+      editor.trigger('keyboard', 'editor.action.commentLine', null);
+
+      // Move cursor down (preserve column)
+      const model = editor.getModel();
+      const pos = editor.getPosition();
+      if (!model || !pos) return;
+
+      const nextLine = Math.min(pos.lineNumber + 1, model.getLineCount());
+      const nextCol = Math.min(pos.column, model.getLineMaxColumn(nextLine));
+
+      editor.setPosition({ lineNumber: nextLine, column: nextCol });
+      editor.revealPositionInCenterIfOutsideViewport({
+        lineNumber: nextLine,
+        column: nextCol,
+      });
+    },
+  });
+};

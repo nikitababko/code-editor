@@ -19,6 +19,7 @@ import { useDebounce } from './hooks';
 import type { EditorInstanceType, LanguageType } from './types.ts';
 import {
   applyEditorOptions,
+  bindCommentAndNextLine,
   bindRunShortcut,
   bindSaveShortcut,
   formatDocumentNow,
@@ -74,6 +75,7 @@ export const App = () => {
     applyEditorOptions(editor);
     bindSaveShortcut(editor, monaco);
     bindRunShortcut(editor, monaco, runRef);
+    bindCommentAndNextLine(editor, monaco);
   };
 
   const handleCleanOutput = () => {
