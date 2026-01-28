@@ -20,6 +20,7 @@ import type { EditorInstanceType, LanguageType } from './types.ts';
 import {
   applyEditorOptions,
   bindCommentAndNextLine,
+  bindDuplicateLineDown,
   bindRunShortcut,
   bindSaveShortcut,
   formatDocumentNow,
@@ -76,6 +77,7 @@ export const App = () => {
     bindSaveShortcut(editor, monaco);
     bindRunShortcut(editor, monaco, runRef);
     bindCommentAndNextLine(editor, monaco);
+    bindDuplicateLineDown(editor, monaco);
   };
 
   const handleCleanOutput = () => {

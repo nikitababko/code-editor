@@ -148,3 +148,108 @@ export const bindCommentAndNextLine = (
     },
   });
 };
+
+export const bindDuplicateLineDown = (editor: EditorInstanceType, monaco: MonacoType) => {
+  if (!editor || !monaco) return;
+
+  editor.addAction({
+    id: 'duplicate-line-down',
+    label: 'Duplicate Line Down',
+
+    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyD],
+
+    run: (ed) => {
+      const model = ed.getModel();
+      const selection = ed.getSelection();
+
+      if (!model || !selection) return;
+
+      const eol = model.getEOL();
+
+      // There is a text selection
+      if (!selection.isEmpty()) {
+        // Get selected text
+        const selectedText = model.getValueInRange(selection);
+
+        // Position where duplicated text will be inserted
+        const insertPos = selection.getEndPosition();
+
+        // Create undo group
+        ed.pushUndoStop();
+
+        // Insert duplicated selection
+        ed.executeEdits('duplicate-selection-down', [
+          {
+            range: new monaco.Range(
+              insertPos.lineNumber,
+              insertPos.column,
+              insertPos.lineNumber,
+              insertPos.column,
+            ),
+            text: selectedText,
+          },
+        ]);
+
+        ed.pushUndoStop();
+
+        // Move selection to duplicated block
+        const startOffset = model.getOffsetAt(selection.getStartPosition());
+        const endOffset = model.getOffsetAt(selection.getEndPosition());
+
+        const newStart = model.getPositionAt(endOffset);
+        const newEnd = model.getPositionAt(endOffset + (endOffset - startOffset));
+
+        ed.setSelection(
+          new monaco.Selection(
+            newStart.lineNumber,
+            newStart.column,
+            newEnd.lineNumber,
+            newEnd.column,
+          ),
+        );
+
+        // Ensure duplicated block is visible
+        ed.revealPositionInCenterIfOutsideViewport(newEnd);
+
+        return;
+      }
+
+      // No selection → duplicate current line
+      const pos = ed.getPosition();
+      if (!pos) return;
+
+      const lineNumber = pos.lineNumber;
+
+      // Read current line content
+      const lineContent = model.getLineContent(lineNumber);
+
+      // Insert duplicated line below
+      const insertLine = lineNumber + 1;
+
+      ed.pushUndoStop();
+
+      ed.executeEdits('duplicate-line-down', [
+        {
+          range: new monaco.Range(insertLine, 1, insertLine, 1),
+          text: lineContent + eol,
+        },
+      ]);
+
+      ed.pushUndoStop();
+
+      // Move cursor to duplicated line
+      const nextLine = Math.min(lineNumber + 1, model.getLineCount());
+      const nextColumn = Math.min(pos.column, model.getLineMaxColumn(nextLine));
+
+      const nextPosition = {
+        lineNumber: nextLine,
+        column: nextColumn,
+      };
+
+      ed.setPosition(nextPosition);
+
+      // Keep duplicated line centered in viewport
+      ed.revealPositionInCenterIfOutsideViewport(nextPosition);
+    },
+  });
+};
