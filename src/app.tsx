@@ -50,7 +50,26 @@ export const App = () => {
 
       setIsLoading(true);
       const response = await executeCode(code, selectedLanguage.id);
-      setOutput(response?.data?.run?.output ?? 'undefined');
+      const run = response?.data?.run;
+      const executionOutput = run?.output || run?.stderr;
+      const executionDetails = run?.message
+        ? [
+          `Execution stopped: ${run.message}`,
+          run.wall_time != null
+            ? `Elapsed time: ${(run.wall_time / 1000).toFixed(2)} s`
+            : null,
+          run.memory != null
+            ? `Memory used: ${(run.memory / 1024 / 1024).toFixed(2)} MB`
+            : null,
+        ]
+          .filter(Boolean)
+          .join('\n')
+        : null;
+
+      setOutput(
+        [executionOutput, executionDetails].filter(Boolean).join('\n\n') ||
+          'Program finished with no output',
+      );
     } catch (error) {
       if (error instanceof Error) {
         setOutput(error.message);
